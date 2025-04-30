@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Netflix Clone</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #141414;
+      color: #fff;
+      margin: 0;
+    }
+
+    header nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+    }
+
+    .logo {
+      font-size: 2em;
+      font-weight: bold;
+      color: #e50914;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+    }
+
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .search-bar input {
+      padding: 8px;
+      border: none;
+      background-color: #222;
+      color: #fff;
+    }
+
+    .search-bar button {
+      padding: 8px 15px;
+      background-color: #e50914;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    .user-profile img {
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;
+    }
+
+    .hero {
+      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url("hero_background.jpg");
+      background-size: cover;
+      color: #fff;
+      padding: 100px 50px;
+      text-align: left;
+    }
+
+    .hero-content h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
+
+    .hero-content p {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+
+    .sign-up-button {
+      background-color: #e50914;
+      color: #fff;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+
+    .content-catalog {
+      padding: 20px 50px;
+    }
+
+    .content-catalog h2 {
+      margin-bottom: 15px;
+    }
+
+    .movie-list,
+    .show-list {
+      display: flex;
+      overflow-x: auto;
+      padding-bottom: 20px;
+    }
+
+    .movie-list img,
+    .show-list img {
+      width: 200px;
+      height: auto;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #777;
+    }
+
+    .video-player-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #000;
+      z-index: 1000;
+    }
+  </style>
+  <body>
+    <header>
+      <nav>
+        <div class="logo">Netflix</div>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">TV Shows</a></li>
+          <li><a href="#">Movies</a></li>
+          <li><a href="#">My List</a></li>
+        </ul>
+        <div class="search-bar">
+          <input type="text" placeholder="Search..." />
+          <button>Search</button>
+        </div>
+        <div class="user-profile">
+          <img src="user_avatar.png" alt="User Avatar" />
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <h1>Watch Unlimited Movies & TV Shows</h1>
+          <p>Stream anywhere. Cancel anytime.</p>
+          <button class="sign-up-button">Sign Up Now</button>
+        </div>
+      </section>
+
+      <section class="content-catalog">
+        <h2>Trending Now</h2>
+        <div class="movie-list" id="trending-movies"></div>
+
+        <h2>Popular TV Shows</h2>
+        <div class="show-list" id="popular-shows"></div>
+      </section>
+
+      <section
+        class="video-player-container"
+        id="video-player-container"
+        style="display: none"
+      >
+        <video id="main-video-player" controls width="640" height="360">
+          <source src="" type="application/x-mpegURL" />
+          Your browser does not support HLS video.
+        </video>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Netflix Clone</p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const trendingMovies = [
+          { id: 1, title: "Movie 1", poster: "movie1.jpg", videoUrl: "" },
+          {
+            id: 2,
+            title: "Movie 2",
+            poster: "movie2.jpg",
+            videoUrl: "hls_url_2",
+          },
+        ];
+
+        const popularShows = [
+          {
+            id: 3,
+            title: "Show 1",
+            poster: "show1.jpg",
+            videoUrl: "hls_url_3",
+          },
+          {
+            id: 4,
+            title: "Show 2",
+            poster: "show2.jpg",
+            videoUrl: "hls_url_4",
+          },
+          // ... more shows
+        ];
+
+        const trendingMoviesContainer =
+          document.getElementById("trending-movies");
+        const popularShowsContainer = document.getElementById("popular-shows");
+        const videoPlayerContainer = document.getElementById(
+          "video-player-container"
+        );
+        const mainVideoPlayer = document.getElementById("main-video-player");
+
+        function displayContent(contentList, container) {
+          contentList.forEach((item) => {
+            const img = document.createElement("img");
+            img.src = item.poster;
+            img.alt = item.title;
+            img.addEventListener("click", () => {
+              mainVideoPlayer.src = item.videoUrl;
+              mainVideoPlayer.play();
+              videoPlayerContainer.style.display = "block";
+            });
+            container.appendChild(img);
+          });
+        }
+
+        displayContent(trendingMovies, trendingMoviesContainer);
+        displayContent(popularShows, popularShowsContainer);
+        const searchInput = document.querySelector(".search-bar input");
+        const searchButton = document.querySelector(".search-bar button");
+
+        searchButton.addEventListener("click", () => {
+          const query = searchInput.value.toLowerCase();
+          const allContent = [...trendingMovies, ...popularShows];
+          const results = allContent.filter((item) =>
+            item.title.toLowerCase().includes(query)
+          );
+          console.log("Search Results:", results);
+          // In a real app, you would update the UI to show search results
+        });
+      });
+    </script>
+  </body>
+</html>
